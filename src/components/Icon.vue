@@ -8,9 +8,10 @@
 // import  x from '@/assets/icons/money.svg'
 // console.log(x)
 
+
+const importAll = (requireContext: __WebpackModuleApi.RequireContext) =>
+    requireContext.keys().forEach(requireContext); //这里ts语言不认识requireContext，需要明确其类型
 try {
-  let importAll = (requireContext: __WebpackModuleApi.RequireContext) =>
-      requireContext.keys().forEach(requireContext); //这里ts语言不认识requireContext，需要明确其类型
   importAll(require.context("../assets/icons", true, /\.svg$/));
 } catch (err) {
   console.log(err);
