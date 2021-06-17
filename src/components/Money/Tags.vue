@@ -1,10 +1,10 @@
 <template>
   <div class="tags">
     <div class="new">
-      <button @click="create">新增标签</button>
+      <button @click="createTag">新增标签</button>
     </div>
     <ul class="current">
-      <li v-for="tag in dataSource" :key="tag.id"
+      <li v-for="tag in tagList" :key="tag.id"
           :class="{selected: selectedTags.indexOf(tag)>=0}"
           @click="toggle(tag)">{{tag.name}}
       </li>
@@ -14,16 +14,23 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Component, Prop} from "vue-property-decorator";
-import tagListModel from "@/models/tagListModel.ts";
+import {Component} from "vue-property-decorator";
+import TagHelper from "@/mixins/TagHelper";
+import { mixins } from "vue-class-component";
 
 @Component
-export default class Tags extends Vue{
-  @Prop() readonly dataSource: string[] | undefined
-  selectedTags: string[] = []
+export default class Tags extends mixins(TagHelper){
+  selectedTags: Tag[] = []
 
-  toggle(tag: string){
-    const  index = this.selectedTags.indexOf(tag)
+  get tagList(){
+    return this.$store.state.tagList
+  }
+  created(){
+    this.$store.commit('fetchTags')
+  }
+
+  toggle(tag: Tag){
+    const index = this.selectedTags.indexOf(tag)
     if(index >= 0){
       this.selectedTags.splice(index,1)
     }else{
@@ -32,25 +39,12 @@ export default class Tags extends Vue{
     this.$emit('update:value', this.selectedTags)
   }
 
-  create(){
-    const  name = window.prompt('请输入标签名')
-    if(name === null) {return}
-    if(name.trim() === ''){
-      window.alert('标签名不能为空')
-    }else if(this.dataSource){
-      if(this.dataSource.indexOf(name.trim()) >= 0){
-        window.alert('标签名不能重复')
-      }else{
-        tagListModel.create(name.trim())
-        // this.$emit('update:dataSource', [...this.dataSource,name.trim()])
-      }
-    }
-  }
 }
 </script>
 
 <style lang="scss" scoped>
   .tags {
+    background: white;
     font-size: 14px;
     padding: 16px;
     flex-grow: 1;

@@ -6,7 +6,7 @@
       <span class="rightIcon"></span>
     </div>
     <div class="form-wrapper">
-      <FormItem :value="tag.name"
+      <FormItem :value="currentTag.name"
                 @update:value="update"
                 field-name="标签名"
                 placeholder="请输入标签名"/>
@@ -23,38 +23,34 @@ import Vue from "vue";
 import {Component} from "vue-property-decorator";
 import Button from "@/components/Button.vue";
 import FormItem from "@/components/Money/FormItem.vue";
-import tagListModel from '@/models/tagListModel'
+
 
 @Component({
   components: {Button, FormItem}
 })
 export default class EditLabel extends Vue{
-  tag?: {id: string, name: string} = undefined
+  get currentTag(){
+    return this.$store.state.currentTag
+  }
 
   // 钩子函数 组件创建完成时执行
   created(){
     const id = this.$route.params.id
-    tagListModel.fetch()
-    const tags = tagListModel.data
-    const tag = tags.filter(t => t.id === id)[0]
-    if(tag){
-      this.tag = tag
-    }else {
+    // 重新fetch 一下， 防止用户在当前页面刷新时， Tags已丢失
+    this.$store.commit('fetchTags')
+    this.$store.commit('setCurrentTag', id)
+    if(!this.currentTag){
       this.$router.replace('/404')
     }
   }
   update(name: string){
-    if(this.tag){
-      tagListModel.update(this.tag.id, name);
+    if(name.trim() && name.trim()!==this.currentTag.name && this.currentTag){
+      this.$store.commit('updateTag',{id: this.currentTag.id, name: name.trim()});
     }
   }
   remove(){
-    if(this.tag){
-      if(tagListModel.remove(this.tag.id)){
-        this.$router.back()
-      }else {
-        window.alert('删除失败')
-      }
+    if(this.currentTag){
+      this.$store.commit('removeTag',this.currentTag.id)
     }
   }
   goBack(){

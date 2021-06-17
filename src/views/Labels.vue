@@ -21,31 +21,21 @@
 
 import Vue from "vue";
 import {Component} from "vue-property-decorator";
-import TagListModel from '@/models/tagListModel'
 import Button from "@/components/Button.vue";
-import tagListModel from "@/models/tagListModel";
+import { mixins } from "vue-class-component";
+import TagHelper from "@/mixins/TagHelper";
 
-
-TagListModel.fetch()
 
 @Component({
   components: {Button}
 })
-export default class Labels extends Vue{
-  tags = tagListModel.data
+export default class Labels extends mixins(TagHelper){
+  get tags(){
+    return this.$store.state.tagList
+  }
 
-  createTag(){
-    const name = window.prompt('请输出标签名')
-    if(name?.trim()===''){
-      window.alert('标签名不能为空')
-    }else{
-      const  message = tagListModel.create(name!.trim())
-      if(message === 'duplicated'){
-        window.alert('标签名不能重复')
-      }else if(message === 'success'){
-        window.alert('添加成功')
-      }
-    }
+  beforeCreate(){
+    this.$store.commit('fetchTags')
   }
 }
 

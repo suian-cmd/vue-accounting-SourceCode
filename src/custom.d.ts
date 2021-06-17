@@ -1,8 +1,32 @@
 //定义一个 RecordItem对象类型
 type RecordItem = {
-    tags: string[]
+    tags: Tag[]
     notes: string
     type: string
     amount: number
-    createAt?: Date    // 变量+? 可以为undefined
+    createAt?: string    // 变量+? 可以为undefined
+}
+
+type Tag = {
+    id: string,
+    name: string
+}
+
+type TagListModel = {
+    data: Tag[]
+    fetch: () => Tag[]
+    create: (name: string) => 'success' | 'duplicated'
+    update: (id: string, name: string) => 'success' | 'not found' | 'duplicated'
+    remove: (id: string) => boolean
+    save: () => void
+}
+
+type RootState = {
+    recordList: RecordItem[],
+    tagList: Tag[],
+    currentTag?: Tag
+}
+
+interface Window{
+
 }

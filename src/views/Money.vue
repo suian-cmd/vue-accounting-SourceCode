@@ -2,39 +2,40 @@
 <!--  class-prefix = 'layout 配合 Layout组件设置样式-->
     <Layout class-prefix = 'layout'>
       <NumberPad :value.sync="record.amount" @submit="saveRecord" />
-      <Types :value.sync="record.type" />
+<!--      <Types :value.sync="record.type" />-->
+      <tabs :data-source="recordTypeList" :value.sync="record.type"/>
       <div class="notes">
         <FormItem
             field-name="备注"
             placeholder="在这里输入备注"
+            :value="record.notes"
             @update:value="onUpdateNotes" />
       </div>
-      <Tags :data-source="tags" @update:value="onUpdateTags" />
-      {{recordList}}
+      <Tags @update:value="onUpdateTags" />
+      {{this.recordList}}
     </Layout>
 </template>
 
 <script lang="ts">
 
 import NumberPad from "@/components/Money/NumberPad.vue";
-import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
 import Vue from "vue";
 import {Component, Watch} from "vue-property-decorator";
-import recordListModel from "@/models/recordListModel";
 import FormItem from "@/components/Money/FormItem.vue";
-import tagListModel from "@/models/tagListModel";
-
-// 通过 window.localStorage 获取所有支出支入数据
-const recordList: RecordItem[] = recordListModel.fetch()
-tagListModel.fetch()
+import Tabs from "@/components/Tabs.vue";
+import recordTypeList from "@/constants/recordTypeList";
 
 @Component({
-  components: {FormItem, Tags,  Types, NumberPad}
+  components: {Tabs, FormItem, Tags, NumberPad}
 })
 export default class Money extends Vue{
-  tags = tagListModel.data
-  recordList: RecordItem[] = recordList
+  get recordList(){
+    return this.$store.state.recordList
+  }
+
+  recordTypeList = recordTypeList
+
   record: RecordItem = {
     tags: [],
     notes: '',
@@ -42,7 +43,11 @@ export default class Money extends Vue{
     amount: 0
   }
 
-  onUpdateTags(value: string[]){
+  created(){
+    this.$store.commit('fetchRecords')
+  }
+
+  onUpdateTags(value: Tag[]){
     this.record.tags = value
   }
 
@@ -51,17 +56,9 @@ export default class Money extends Vue{
   }
 
   saveRecord(){
-    // 深拷贝，如果直接赋值，会导致record2 和 this.record 引用的是同一对象
-    const  record2: RecordItem = recordListModel.clone(this.record)
-    record2.createAt = new Date()
-    // console.log(record2.createAt.toLocaleDateString() + '--' + record2.createAt.toLocaleTimeString())
-    // console.log(record2.createAt.toString())
-    this.recordList.push(record2)
-  }
-
-  @Watch('recordList')
-  onRecordListChange(){
-    recordListModel.save(this.recordList)
+    this.$store.commit('createRecord',this.record)
+    this.record.tags = []
+    this.record.notes = ''
   }
 
 }

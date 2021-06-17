@@ -4,7 +4,7 @@
       <span class="name">{{ this.fieldName }}</span>
       <input type="text"
              :value="value"
-             @input="onValueChanged($event.target.value)"
+             @change="onValueChanged($event.target.value)"
              :placeholder="placeholder">
     </label>
   </div>
@@ -19,6 +19,7 @@ export default class FormItem extends  Vue{
   @Prop({default: ''}) readonly value!: string
   @Prop({required: true}) fieldName!: string
   @Prop() placeholder?: string
+  @Prop() type?:string
 
   onValueChanged(value: string){
     this.$emit('update:value', value)
