@@ -1,18 +1,14 @@
 <template>
   <div>
-    <p slot="title">标签</p>
+    <p slot="title">图标</p>
     <div class="scrollArea">
       <ul class="tagList" slot="content">
-        <li v-for="(tag,index) in filteredList" :key="index">
-          <div class="icon-wrapper"
-               :class="{selected: tag.name === selectedTag.name}"
-                @click='select(tag)'>
-                <Icon :name="tag.svg"></Icon>
-            {{tag.name}}
-          </div>
-        </li>
-        <li>
-          <div class="icon-wrapper" @click="edit"> 编辑 ></div>
+        <li v-for="svg in iconList" :key="svg"
+            @click="$emit('change', svg)"
+        >
+        <div :class="highlight(svg)">
+          <Icon :name="svg"></Icon>
+        </div>
         </li>
       </ul>
     </div>
@@ -21,48 +17,40 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Component, Prop, Watch} from "vue-property-decorator";
+import {Component, Model} from "vue-property-decorator";
+import Icon from "@/components/Icon.vue";
+import Parts from "@/components/Money/Parts.vue";
+import customTagList from "@/constants/customTagList";
 
-
-@Component
-export default class Tags extends Vue{
-  @Prop() selectedTag!: Tag
-  @Prop() type!: string
-
-  created(){
-    this.$store.commit('fetchTags')
+@Component({
+  components:{
+    Icon, Parts
   }
-  get filteredList(){
-    return this.$store.state.tagList.filter((tag: Tag) => tag.type === this.type)
-  }
+})
+export default class IconList extends Vue{
+  @Model('change', {required: true, type: String}) readonly icon!: string
+  iconList = customTagList
 
-  @Watch('type')
-  updateCategory(){
-    // if(this.type === 'income'){
-    //   this.select({name: '工资', type: 'income', id: '', svg: '工资'})
-    // }else{
-    //   this.select({name: '饮食费', type: 'expense', id: '', svg: '饮食费'})
-    // }
-    this.select(this.$store.state.tagList.filter((tag: Tag) => tag.type === this.type)[0])
-  }
-
-  select(tag: Tag){
-    this.$emit('update:selectedTag', tag)
-  }
-  edit(){
-    this.$router.push('/money/edit')
+  highlight(svg: string){
+    return{
+      'icon-wrapper': true,
+      'selected': this.icon === svg
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+
 p {
   padding: 10px 20px;
   font-weight: bold;
 }
 
 .scrollArea {
-  max-height: 50vh;
+  //height: 30vh;
+  //overflow: auto;
 
   .tagList {
     padding: 0 10px;
@@ -97,10 +85,11 @@ p {
           }
         }
       }
+
       svg {
         margin-top: 2px;
-        height: 50px;
-        width: 50px;
+        height: 30px;
+        width: 30px;
       }
 
       @keyframes shake {
@@ -123,4 +112,6 @@ p {
     }
   }
 }
+
+
 </style>

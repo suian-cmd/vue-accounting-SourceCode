@@ -6,9 +6,11 @@ import store from './store'
 import Nav from "@/components/Nav.vue";
 import Layout from "@/components/Layout.vue";
 import Icon from "@/components/Icon.vue";
-
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 Vue.config.productionTip = false
 
+Vue.use(Antd);
 Vue.component('Nav', Nav)
 Vue.component("Layout", Layout)
 Vue.component('Icon', Icon)
@@ -19,12 +21,12 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-// 解决浏览器上部地址栏占据高度
-window.onload = function (){
-  setTimeout(function (){
-    window.scrollTo(0,10000)
-  }, 0)
-}
+// // 解决浏览器上部地址栏占据高度
+// window.onload = function (){
+//   setTimeout(function (){
+//     window.scrollTo(0,10000)
+//   }, 0)
+// }
 
 // if(document.documentElement.clientWidth > 500){
 //   window.alert('请使用手机打开本页面，以保证浏览效果')
