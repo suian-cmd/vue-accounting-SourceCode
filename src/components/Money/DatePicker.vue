@@ -2,7 +2,7 @@
   <Parts>
     <p slot="title">日期</p>
     <div slot="content">
-      <a-date-picker placeholder="选择日期"
+      <a-date-picker placeholder="选择日期" :allowClear="false"
                      :defaultValue="moment(getCurrentDate(),
                      'YYYY-MM-DD')"
                      @change="selectDate"/>

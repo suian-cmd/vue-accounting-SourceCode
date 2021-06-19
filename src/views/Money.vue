@@ -62,15 +62,16 @@ export default class Money extends Vue{
         centered: true,
         onOk(){
           _this.$store.commit('createRecord',_this.record)
-          _this.$message.success({content: '已保存',duration:1});
-        }
+          _this.$message.success({content: '已保存',duration:1})
+          _this.record.notes = ''
+        },
       })
     } else{
       _this.$store.commit('createRecord',_this.record)
       _this.$message.success({content: '已保存',duration:1});
+      _this.record.notes = ''
     }
     this.record.amount = 0
-    this.record.notes = ''
   }
 
 }

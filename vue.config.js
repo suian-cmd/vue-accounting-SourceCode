@@ -2,6 +2,9 @@ const path = require('path')
 
 module.exports = {
   lintOnSave: false,
+  publicPath: process.env.NODE_ENV === 'production'
+      ? '/vue-accounting-web/'
+      : '/',
   chainWebpack: config => {
     const dir = path.resolve(__dirname, 'src/assets/icons')  //确定icon所在的目录, __dirname 为根目录
     config.module  //config是vue把webpack的API封装暴露给我们的一个对象，让我们使用

@@ -2,7 +2,6 @@ const defaultTagList = [
     {name: '饮食费',svg:'饮食费', type: 'expense'},
     {name: '日用品',svg:'日用品', type: 'expense'},
     {name: '衣服',svg:'衣服', type: 'expense'},
-    {name: '美容', svg:'美容',type: 'expense'},
     {name: '交际费',svg:'交际费', type: 'expense'},
     {name: '医疗费',svg:'医疗费', type: 'expense'},
     {name: '教育费',svg:'教育费', type: 'expense'},
@@ -16,4 +15,8 @@ const defaultTagList = [
     {name: '副业',svg:'副业', type: 'income'},
     {name: '投资',svg:'投资', type: 'income'},
 ]
+
+// {name: '美容', svg:'美容',type: 'expense'},
+
 export default defaultTagList;
+

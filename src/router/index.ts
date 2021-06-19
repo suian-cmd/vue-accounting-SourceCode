@@ -7,6 +7,8 @@ import NotFound from "@/views/NotFound.vue";
 import EditLabel from "@/views/EditLabel.vue";
 import Edit from "@/components/Money/Edit.vue";
 import Add from "@/components/Money/Add.vue";
+import Calendar from "@/views/Calendar.vue";
+import Reports from "@/views/Reports.vue";
 
 Vue.use(VueRouter)
 
@@ -27,12 +29,16 @@ const routes: Array<RouteConfig> = [
     component: Add
   },
   {
-    path : '/labels',
-    component : Labels
+    path : '/calendar',
+    component : Calendar
   },
   {
     path : '/statistics',
     component : Statistics
+  },
+  {
+    path : '/reports',
+    component : Reports
   },
   {
     path : '/labels/edit/:id',

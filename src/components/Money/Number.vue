@@ -3,9 +3,9 @@
     <p slot="title" v-if="type === 'expense'">支出</p>
     <p slot="title" v-else>收入</p>
     <label slot="content">
-      <a-input type="number" pattern="\d*"
+      <a-input type="number"
                onfocus="if(value === '0'){value=''}"
-               onblur="if(value===''){value='0'}"
+               onblur="if(isNaN(value) || value.trim()===''){value='0'}"
                :value="commaAmount"
                @input="onValueChange"
                />
@@ -28,13 +28,14 @@ export default class Number extends Vue{
   @Prop() value!: number
 
   get commaAmount(){
-    return this.value.toString().replace(/\D/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // return this.value.toString().replace(/\D/g, "")
+    //     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return this.value.toString()
   }
 
   onValueChange(event: InputEvent){
     const input =  (event.currentTarget as HTMLInputElement)
-    const output = parseFloat(input.value.replace(/,/g, ''));
+    const output = parseFloat(input.value) || 0;
     this.$emit('update:value', output)
   }
 }
