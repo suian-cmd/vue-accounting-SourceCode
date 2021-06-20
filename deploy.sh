@@ -20,7 +20,7 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
 
 # 部署到 https://<USERNAME>.github.io/<REPO>
-git push --set-upstream git@github.com:suian-cmd/vue-accounting-web.git master
+git push -f git@github.com:suian-cmd/vue-accounting-web.git master
 #git push --set-upstream git@gitee.com:suian520/vue-accounting-web.git master
 
 cd -
